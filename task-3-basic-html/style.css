@@ -1,0 +1,82 @@
+.resume{
+    border: 2px solid black;
+    width: 500px;
+    height: 700px;
+  }
+  .introduction{
+    background-color: rgb(214, 229, 229);
+    border: 1px solid rgb(214, 229, 229);
+    width: 250px;
+    height: 185px;
+    margin-left: 30px ;
+    margin-top: 30px;
+    padding-left: 15px;
+    float: left;
+    margin-bottom: 20px;
+  }
+  .photo{
+    background-color: rgb(214, 229, 229);
+    border: 1px solid rgb(214, 229, 229);
+    width: 160px;
+    height: 185px;
+    float: right;
+    margin-right: 30px ;
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
+  .img{
+    margin-left: 13px;
+    margin-top: 15px;
+  }
+  .information{
+    background-color: rgb(214, 229, 229);
+    border: 1px solid rgb(214, 229, 229);
+    width: 420px;
+    height: 270px;
+    margin-left: 30px ;
+    margin-top: 230px;
+    padding-left: 15px;
+    margin-bottom: 20px;
+    float:none ;
+  }
+  .infor{
+    text-align: right;
+    width: 55px;
+    margin-left: 2px;
+    font-size: 10px;
+    float: left;
+    margin-top: 35px;
+  }
+  .mation{
+    text-align: left;
+    width: 310px;
+    font-size: 10px;
+    float:right;
+    margin-right:  20px;
+    margin-top: 2px;
+  }
+  ul{
+    display: inline-block;
+    padding-left: 12px; 
+    list-style-type: disc;
+  }
+  .education{
+    background-color: rgb(213, 220, 220);
+    border: 1px solid rgb(213, 220, 220);
+    width: 420px;
+    height: 130px;
+    margin-left: 30px ;
+    margin-top: 28px;
+    padding-left: 15px;
+    margin-bottom: 20px;
+    float:none ;
+  }
+  table{
+    border-collapse: collapse;
+    width: 95%;
+    padding-right: 4px;
+  }
+  td,th{
+    border: 1px solid black;
+    text-align: left;
+  }
