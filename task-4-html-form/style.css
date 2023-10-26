@@ -1,0 +1,52 @@
+* {
+    padding: 4px;
+    font-family:"aerial";
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form {
+    width: 35vw;
+    border: 1.5px solid black;
+    background-color: rgb(173, 187, 217);
+}
+
+.contact {
+    display: flex;
+
+}
+
+.section1 {
+    display: flex;
+    flex-direction: column;
+}
+
+.section2 {
+    display: flex;
+}
+
+.contact-details {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.label {
+    width: 120px;
+    display: inline-block;
+}
+
+.input-button {
+    padding: 5px;
+    margin: 10px;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
