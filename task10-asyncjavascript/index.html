@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <title>Async-JS</title>
+</head>
+<body>
+    <div class="main-div container">
+        <div class="table-div" style="margin:5px auto;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col" class="cell2">Details</th>
+                    </tr>
+                </thead>
+                <tbody id="user-list">
+                   
+                </tbody>
+            </table>
+        </div>
+        
+    
+        <nav aria-label="Page navigation example">
+            <ul class="pagination" style="font-size: 12px; justify-content: center;">
+              <li class="page-item" id="prevPage"><a class="page-link" href="#">Previous</a></li>
+              <li class="page-item"><a class="page-link" id="firstPage" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" id="currentPage" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">...</a></li>
+              <li class="page-item"><a class="page-link" id="lastPage" href="#">3</a></li>
+              <li class="page-item" id="nextPage"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="modal-user" id="user-modal">
+        <div class="modal-content-user">
+           
+            <div id="modal-content-user"></div>
+            <div class="close-button"><button type="button" class="btn btn-outline-primary" id="close-modal">Close</button></div>  
+        </div>
+    </div>
+    <script>
+        const pageSize = 5; 
+        let currentPage = 1;
+        let firstPage = 1;
+        let userData = [];
+
+        function toggleModal() {
+            const modal = document.getElementById('user-modal');
+            modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+
+        const url = 'https://gorest.co.in/public/v2/users';
+        async function fetchUserData() {
+            try {
+                const response = await fetch(url);
+                const responseData = await response.json();
+                
+                userData = responseData;
+                totalPages = Math.ceil(userData.length / pageSize);
+                renderUserTable(currentPage);
+            
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        }
+
+        function renderUserTable(page) {
+            const userList = document.getElementById('user-list');
+            userList.innerHTML = ''; 
+
+            const startIndex = (page - 1) * pageSize;
+            const endIndex = startIndex + pageSize;
+
+            for (let i = startIndex; i < endIndex && i < userData.length; i++) {
+                const user = userData[i];
+
+                const row = document.createElement("tr");
+
+                const uname = user.name;
+                const nameCell = document.createElement("td");
+                nameCell.className = "cell1";
+                nameCell.textContent = uname;
+                row.appendChild(nameCell);
+                      
+                const detailsCell = document.createElement("td");
+                detailsCell.className = "cell2";
+                const buttonIcon = document.createElement("button");
+                buttonIcon.className = "show-details";
+                const iconEye = document.createElement("i");
+                iconEye.className = "bi bi-eye-fill";
+                detailsCell.appendChild(buttonIcon);
+                buttonIcon.appendChild(iconEye);
+                row.appendChild(detailsCell);
+                buttonIcon.addEventListener('click', () => openModal(user));
+
+                userList.appendChild(row);
+
+            }
+
+            updatePaginationControls();
+        }
+        async function openModal(user) {
+            const modalContent = document.getElementById('modal-content-user');
+
+            try {
+
+                const response = await fetch(`https://gorest.co.in/public/v2/users${user.id}/projects`);
+                const userProjects = await response.json();
+            
+                let projectNames;
+               
+                if(userProjects.length <= 0){
+                    projectNames = "No project assigned";
+                }
+                else{
+                    projectNames = userProjects.map(project => project.project_name).join(', ');
+                }
+                
+                modalContent.innerHTML = `
+                <strong><p>Name: ${user.name}</p></strong>
+                <p>Email: <a href="mailto:${user.email}">${user.email}</a></p>
+                <p>Phone: <a href="tel:${user.phone}">${user.phone}</a></p>
+                <p>Projects: ${projectNames}</p>
+            `;
+                toggleModal();
+                
+            } catch (error) {
+                console.error('Error fetching user details:', error);
+            }
+        }
+        document.getElementById('close-modal').addEventListener('click', () => {
+            toggleModal();
+        });
+        function updatePaginationControls() {
+
+            const prevPageButton = document.getElementById('prevPage');
+            const nextPageButton = document.getElementById('nextPage');
+            const currentPageSpan = document.getElementById('currentPage');
+            const lastPageNumber = document.getElementById('lastPage');
+            const firstPageNumber = document.getElementById('firstPage');
+
+            prevPageButton.disabled = currentPage === 1;
+            nextPageButton.disabled = currentPage === Math.ceil(userData.length / pageSize);
+            const lp = Math.ceil(userData.length / pageSize);
+            lastPageNumber.textContent = lp;
+            firstPageNumber.textContent = 1;
+
+            if(currentPage === 1){
+                currentPageSpan.textContent = 2; 
+            }
+            else{
+                currentPageSpan.textContent = currentPage;
+            }
+        }
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderUserTable(currentPage);
+            }
+        });
+        
+        document.getElementById('lastPage').addEventListener('click', () => {
+            let lastPageButton = Math.ceil(userData.length / pageSize);
+            renderUserTable(lastPageButton);
+        })
+
+        document.getElementById('firstPage').addEventListener('click', () => {
+            renderUserTable(firstPage);
+        });
+
+        document.getElementById('nextPage').addEventListener('click', () => {
+            if (currentPage < Math.ceil(userData.length / pageSize)) {
+                currentPage++;
+                renderUserTable(currentPage);
+            }
+        });
+
+        document.getElementById('currentPage').addEventListener('click', () => {
+            renderUserTable(currentPage);
+        })
+
+        window.onload = fetchUserData;
+    </script>
+</body>
+</html>
